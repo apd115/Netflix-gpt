@@ -9,3 +9,6 @@ Login Page -
 
 2.Validating User Name, Email and Password - 
 - Implemented form validation using useRef() and regular expressions for username, email, and password inputs to ensure input correctness and user-friendly error handling.
+
+Created Redux Store for storing user info.
+Divided it into slices i.e. userSlice.

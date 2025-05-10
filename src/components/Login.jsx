@@ -3,10 +3,13 @@ import Header from "./Header";
 import { Form } from "react-router-dom";
 import { useState, useRef } from "react";
 import { Validate } from "../utils/Validate";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../utils/Firebase.config";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  
+  const navigate = useNavigate();
   const [signUp, setSignUp] = useState("true");
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -30,6 +33,7 @@ const Login = () => {
           // Signed up
           const user = userCredential.user;
           console.log(user);
+          navigate("/Browse")
           // ...
         })
         .catch((error) => {
@@ -38,6 +42,21 @@ const Login = () => {
           setErrorMsg(errorCode + "-" + errorMessage);
           // ..
         });
+    }
+    else{
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log(user);
+    navigate("/Browse")
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    setErrorMsg(errorCode + "-" + errorMessage);
+  });
     }
   };
 
@@ -84,7 +103,7 @@ const Login = () => {
         <p className="text-red-600 p-1 m-2">{errorMsg}</p>
         <button
           onClick={handleClick}
-          className="bg-pink-950 text-white p-1 m-2 w-full rounded-lg"
+          className="bg-pink-950 text-white p-1 m-2 w-full rounded-lg cursor-pointer"
         >
           Sign In
         </button>
