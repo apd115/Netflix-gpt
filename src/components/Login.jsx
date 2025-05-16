@@ -6,6 +6,7 @@ import { Validate } from "../utils/Validate";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../utils/Firebase.config";
 import { useNavigate } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
 
 const Login = () => {
   
@@ -32,8 +33,21 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          updateProfile(user, {
+          displayName: "userName.current.value", photoURL: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg"
+          }).then(() => {
+          // Profile updated!
+          // ...
+          navigate("/Browse");
+          }).catch((error) => {
+          // An error occurred
+          // ...
+             const errorCode = error.code;
+             const errorMessage = error.message;
+             setErrorMsg(errorCode + "-" + errorMessage);
+          });
           console.log(user);
-          navigate("/Browse")
+          
           // ...
         })
         .catch((error) => {
