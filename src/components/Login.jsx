@@ -7,9 +7,12 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import { auth } from "../utils/Firebase.config";
 import { useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [signUp, setSignUp] = useState("true");
   const [errorMsg, setErrorMsg] = useState(null);
@@ -34,10 +37,13 @@ const Login = () => {
           // Signed up
           const user = userCredential.user;
           updateProfile(user, {
-          displayName: "userName.current.value", photoURL: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg"
+          displayName: userName.current.value, photoURL: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg"
           }).then(() => {
           // Profile updated!
           // ...
+          const {uid, email, displayName, photoURL} = auth.currentUser;
+          dispatch(addUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
+
           navigate("/Browse");
           }).catch((error) => {
           // An error occurred
