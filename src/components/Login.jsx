@@ -14,7 +14,7 @@ const Login = () => {
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [signUp, setSignUp] = useState("true");
+  const [signUp, setSignUp] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
 
   const email = useRef(null);
@@ -44,7 +44,7 @@ const Login = () => {
           const {uid, email, displayName, photoURL} = auth.currentUser;
           dispatch(addUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
 
-          navigate("/Browse");
+          
           }).catch((error) => {
           // An error occurred
           // ...
@@ -68,8 +68,9 @@ const Login = () => {
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log(user);
-    navigate("/Browse")
+    const { uid, email, displayName, photoURL } = auth.currentUser;
+    dispatch(addUser({ uid:uid, email:email, displayName:displayName, photoURL:photoURL }));
+    
     // ...
   })
   .catch((error) => {
