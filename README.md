@@ -51,4 +51,12 @@ Input Validation for Login and Sign-up Forms
 
 Added form validation to check for email format and password strength before submitting auth requests.
 
+9. We have unsubscribed to our onAuthStateChanged to avoid memory leak. //Hygiene practice
+10. Add hardcoded values to the constants.js file.
+
+11. Used TMDB API to render movie lists on UI.
+
+⚠️ This project uses The Movie Database (TMDb) API to fetch movie data. Since TMDb is blocked in India, you may not see the movie list rendered on the UI. To bypass this, please use the Webshare VPN Chrome Extension or any proxy to view the content correctly.
+
+
 
