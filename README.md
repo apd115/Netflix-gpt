@@ -58,5 +58,11 @@ Added form validation to check for email format and password strength before sub
 
 ⚠️ This project uses The Movie Database (TMDb) API to fetch movie data. Since TMDb is blocked in India, you may not see the movie list rendered on the UI. To bypass this, please use the Webshare VPN Chrome Extension or any proxy to view the content correctly.
 
-
+12. Registered the TMDB API key in the constants.js file. //Made it a constant to avoid hardcoding in the codebase and also made an app on TMDB to get the API key and access token.
+13. Then fetched the mnot trending movies using the TMDB API and rendered them on the UI in the browse page.
+14. Created Redux store for storing movie data and Movie Videos.
+15. Used Redux to manage movie data and videos, allowing for efficient state management and access across components.
+16. Created Redux store slices for movies and videos, ensuring modularity and separation of concerns.
+17. Created custom hooks to fetch movie data and videos, promoting reusability and cleaner code.
+18. IMplemented autoplay functionality for movie trailers using the YouTube API, enhancing user engagement with dynamic content.
 

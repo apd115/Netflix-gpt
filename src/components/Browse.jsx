@@ -1,26 +1,22 @@
-import React from 'react';
+
 import Header from './Header';
-import { useEffect } from 'react';
-import { options } from '../utils/constants';
-
-
+import { MainSection } from './MainSection';
+import { SecondarySection } from './SecondarySection';
+import { useNowPlayingMovies } from './hooks/useNowPlayingMovies';
 const Browse = () => {
 
-  const movies = async ()=>{
-     const data = await fetch("https://api.themoviedb.org/3/movie/changes?page=1", options);
-
-     const json = await data.json();
-     console.log(json.results);
-  }
-
-  useEffect(()=>{
-        movies();
-  },[]);
+  useNowPlayingMovies();
   return (
     <div>
-      <Header/>
-      BROWSE
-      
+      {/* Two main components - MainSection , SecondarySection.
+      MainSection : Movie tailer + tailor etc.
+      SecondarySection : MovieList*n  */}
+
+      <Header />
+      <MainSection />
+      <SecondarySection />
+
+
     </div>
   );
 }
