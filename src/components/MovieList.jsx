@@ -1,17 +1,22 @@
 import { MovieCard } from "./MovieCard";
 
+
 export const MovieList = ({ title, movies }) => {
     console.log(movies);
+    if (!movies || movies.length === 0) return null;
+
 
     return (
         <div>
-            <div>
-                <h1>{title}</h1>
-                <div>
-                    {/* {movies.map((movie) => )}; */}
-                    < MovieCard posterPath={movies.poster_path} />
+            <div className="px-6 ">
+                <h1 className="text-2xl py-4 font-bold text-white ">{title}</h1>
+                <div className="flex overflow-x-scroll">
+                    <div className="flex ">
+                        {movies?.map((movie) => (<MovieCard key={movie.id} posterPath={movie.poster_path} />))}
 
+                    </div>
                 </div>
+
             </div>
 
         </div>

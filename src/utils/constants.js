@@ -8,4 +8,4 @@ export const options = {
   }
 };
 
-export const MOVIE_IMG_CDN = "https://image.tmdb.org/t/p/w500/";
+export const MOVIE_IMG_CDN = "https://image.tmdb.org/t/p/w500";
