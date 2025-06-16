@@ -6,7 +6,7 @@ export const MainSection = () => {
     const movies = useSelector((state) => state.movies?.nowPlayingMovies);
 
     if (!movies) return; //knowns as early return
-    const mainMovie = movies[0];
+    const mainMovie = movies[1];
 
     console.log(mainMovie);
 
