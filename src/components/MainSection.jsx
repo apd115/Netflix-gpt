@@ -8,7 +8,7 @@ export const MainSection = () => {
     if (!movies) return; //knowns as early return
     const mainMovie = movies[1];
 
-    console.log(mainMovie);
+
 
     const { title, overview, id } = mainMovie;
     return (

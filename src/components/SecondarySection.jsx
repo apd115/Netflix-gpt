@@ -5,18 +5,30 @@ import { MovieList } from "./MovieList";
 export const SecondarySection = () => {
 
     const movies = useSelector((store) => store.movies);
-    console.log(movies);
+
     return (
-        movies.nowPlayingMovies && (
-            < div className="bg-black" >
-                <div className="-mt-52 relative z-20 pl-12">
+        < div className="bg-black" >
+            <div className="-mt-52 relative z-20 pl-12">
+                {movies.nowPlayingMovies && (
+
+
                     <MovieList title="Now Playing Movies" movies={movies.nowPlayingMovies} />
-                    <MovieList title="Trending" movies={movies.nowPlayingMovies} />
-                    <MovieList title="Popular" movies={movies.nowPlayingMovies} />
-                    <MovieList title="Horror" movies={movies.nowPlayingMovies} />
-                </div>
-            </div >
-        )
+                )
+                }
+                {movies.popularMovies && (
+                    <MovieList title="Popular Movies" movies={movies.popularMovies} />
+                )}
+                {movies.topRatedMovies && (
+                    <MovieList title="Top Rated Movies" movies={movies.topRatedMovies} />
+                )}
+                {movies.upcomingMovies && (
+                    <MovieList title="Upcoming Movies" movies={movies.upcomingMovies} />
+                )
+
+                }
+
+            </div>
+        </div >
 
     );
 };
