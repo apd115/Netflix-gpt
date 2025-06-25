@@ -1,4 +1,6 @@
 
+import { useSelector } from 'react-redux';
+import { GptSearch } from './GptSearch';
 import Header from './Header';
 import { MainSection } from './MainSection';
 import { SecondarySection } from './SecondarySection';
@@ -8,19 +10,28 @@ import { useTopRatedMovies } from './hooks/useTopRatedMovies';
 import { useUpcomingMovies } from './hooks/useUpcomingMovies';
 const Browse = () => {
 
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+
+
   useNowPlayingMovies();
   usePopularMovies();
   useTopRatedMovies();
   useUpcomingMovies();
   return (
     <div>
-      {/* Two main components - MainSection , SecondarySection.
-      MainSection : Movie tailer + tailor etc.
-      SecondarySection : MovieList*n  */}
-
       <Header />
-      <MainSection />
-      <SecondarySection />
+      {
+        showGptSearch ? (<GptSearch />) : (<>
+
+          <MainSection />
+          <SecondarySection />
+        </>)
+
+      }
+
+
+
+
 
 
     </div>

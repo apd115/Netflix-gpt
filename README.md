@@ -65,4 +65,8 @@ Added form validation to check for email format and password strength before sub
 16. Created Redux store slices for movies and videos, ensuring modularity and separation of concerns.
 17. Created custom hooks to fetch movie data and videos, promoting reusability and cleaner code.
 18. IMplemented autoplay functionality for movie trailers using the YouTube API, enhancing user engagement with dynamic content.
+19. Displayed now playing, popular and top rated movies on the browse page using TMDB API.
+20. Added Gpt serach page containing gpr search bar and gpt chat box.
+21. A movie recommendation system based on user preferences and viewing history, enhancing user experience by suggesting relevant content.
+22. Implemented multi-language support for the app, allowing users to choose their preferred language for a more personalized experience on gpt search page.
 

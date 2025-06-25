@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { BG_URL } from "../utils/constants";
 
 const Login = () => {
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [signUp, setSignUp] = useState(true);
@@ -37,23 +38,23 @@ const Login = () => {
           // Signed up
           const user = userCredential.user;
           updateProfile(user, {
-          displayName: userName.current.value, photoURL: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg"
+            displayName: userName.current.value, photoURL: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg"
           }).then(() => {
-          // Profile updated!
-          // ...
-          const {uid, email, displayName, photoURL} = auth.currentUser;
-          dispatch(addUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
+            // Profile updated!
+            // ...
+            const { uid, email, displayName, photoURL } = auth.currentUser;
+            dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }))
 
-          
+
           }).catch((error) => {
-          // An error occurred
-          // ...
-             const errorCode = error.code;
-             const errorMessage = error.message;
-             setErrorMsg(errorCode + "-" + errorMessage);
+            // An error occurred
+            // ...
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setErrorMsg(errorCode + "-" + errorMessage);
           });
-          console.log(user);
-          
+
+
           // ...
         })
         .catch((error) => {
@@ -63,21 +64,21 @@ const Login = () => {
           // ..
         });
     }
-    else{
+    else {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    const { uid, email, displayName, photoURL } = auth.currentUser;
-    dispatch(addUser({ uid:uid, email:email, displayName:displayName, photoURL:photoURL }));
-    
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrorMsg(errorCode + "-" + errorMessage);
-  });
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          const { uid, email, displayName, photoURL } = auth.currentUser;
+          dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
+
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMsg(errorCode + "-" + errorMessage);
+        });
     }
   };
 
@@ -90,7 +91,7 @@ const Login = () => {
 
       <div className="absolute ">
         <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/69bec183-9cc8-49d4-8fc2-08228d3c91b4/web/IN-en-20250414-TRIFECTA-perspective_c8273fb1-8860-4ff5-bd1c-c2c4b44d5f2a_large.jpg"
+          src={BG_URL}
           alt="screen-img"
         />
       </div>
