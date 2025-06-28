@@ -4,6 +4,9 @@ const gptSlice = createSlice({
     name: "gpt",
     initialState: {
         showGptSearch: false,
+        movieMatches: [],
+        movieNames: [],
+        errorMsg: null,
 
     },
     reducers: {
@@ -11,9 +14,18 @@ const gptSlice = createSlice({
             state.showGptSearch = !state.showGptSearch;
 
         },
+        addGeminiMovieResults: (state, action) => {
+            const { movieMatches, movieNames } = action.payload;
+            state.movieMatches = movieMatches;
+            state.movieNames = movieNames;
+
+        },
+        addGeminiErrorMsg: (state, action) => {
+            state.errorMsg = action.payload;
+        }
     },
 
 });
 
-export const { toggleGptSearchView } = gptSlice.actions;
+export const { toggleGptSearchView, addGeminiMovieResults, addGeminiErrorMsg } = gptSlice.actions;
 export default gptSlice.reducer;

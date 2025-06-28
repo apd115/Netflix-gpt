@@ -6,7 +6,7 @@ import { GptSearchBar } from "./GptSearchBar";
 export const GptSearch = () => {
     return (
         <div>
-            <div className="absolute -z-40">
+            <div className="fixed -z-40">
                 <img
                     src={BG_URL}
                     alt="screen-img"
