@@ -1,14 +1,14 @@
 const lang = {
     English: {
-        search: "search:",
+        search: "search",
         placeholder: "What would you like to watch today?......",
     },
     Hindi: {
-        search: "खोजें:",
+        search: "खोजें",
         placeholder: "आप आज क्या देखना चाहेंगे?......",
     },
     Spanish: {
-        search: "buscar:",
+        search: "buscar",
         placeholder: "¿Qué te gustaría ver hoy?......",
     }
 };

@@ -2,30 +2,30 @@
 
 Login Page -
 
-1.Login Form
+1. Login Form
 - The top section of the login page includes a custom header that displays the Netflix logo, giving the UI a familiar and polished look.
 - A single, versatile form is used for both login and sign-up functionalities. The form dynamically adapts based on user action, reducing redundancy and improving maintainability.
 - Users can seamlessly switch between login and sign-up modes through a simple toggle mechanism (e.g., a button or link), with the form fields and button labels updating accordingly.
 
-2.Validating User Name, Email and Password - 
+2. Validating User Name, Email and Password - 
 - Implemented form validation using useRef() and regular expressions for username, email, and password inputs to ensure input correctness and user-friendly error handling.
 
-3.Created Redux Store for storing user info.
+3. Created Redux Store for storing user info.
 Divided it into slices i.e. userSlice.
 
-4.Firebase Authentication (Backend as a Service)
+4. Firebase Authentication (Backend as a Service)
 
 Integrated Firebase Authentication to handle user sign-up, login, and logout functionality.
 
 Utilized createUserWithEmailAndPassword, signInWithEmailAndPassword, and signOut methods from Firebase.
 
-5.Persistent User Session using onAuthStateChanged
+5. Persistent User Session using onAuthStateChanged
 
 Used Firebase’s onAuthStateChanged to detect and maintain login status even after page reloads.
 
 This ensures that the user stays logged in across sessions until they explicitly sign out.
 
-6.Redux State Management
+6. Redux State Management
 
 Implemented Redux to manage and access user state throughout the app.
 
@@ -33,7 +33,7 @@ Structured Redux store into modular slices for clean separation of concerns.
 
 Used useSelector to access user state and useDispatch to update it on login/logout.
 
-7.Conditional Rendering Based on Authentication
+7. Conditional Rendering Based on Authentication
 
 The app displays different UI components based on whether the user is authenticated or not.
 
@@ -43,7 +43,7 @@ Programmatic Navigation with React Router
 
 Used useNavigate from react-router-dom to programmatically redirect users after login/logout actions.
 
-8.Reusable Header Component
+8. Reusable Header Component
 
 Created a reusable <Header /> component that adapts its content based on the user's login state.
 
@@ -69,4 +69,11 @@ Added form validation to check for email format and password strength before sub
 20. Added Gpt serach page containing gpr search bar and gpt chat box.
 21. A movie recommendation system based on user preferences and viewing history, enhancing user experience by suggesting relevant content.
 22. Implemented multi-language support for the app, allowing users to choose their preferred language for a more personalized experience on gpt search page.
+23. Used Gemini API key to process user queries and got the movie suggestions and fetch data from tmdb database based on the movies received from gemini search.
+24. Implemented movie suggestions from tmdb api data based on user queries.
+25. Memoization implementation to reduce api calls.
+26. Added movie data to the redux store.
+27. Reused MovieList container to build movie suggestions boxes in gpt search page.
+28. Created .env file for securing API Keys.
+29. Made the site responsive by adding tailwind css styling for mobile and tablet.
 

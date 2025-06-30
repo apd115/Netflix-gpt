@@ -18,8 +18,7 @@ export const GptMovieSuggestions = () => {
         );
 
     return (
-        <>
-
+        <div>
             {isFallbackResponse ? (
                 <div className="bg-red-900 text-red-300 p-4 rounded-xl shadow-md space-y-2">
                     {movieNames.map((line, index) => (
@@ -37,9 +36,13 @@ export const GptMovieSuggestions = () => {
                 </div>
             }
 
+        </div>
 
 
-        </>
+
+
+
+
 
     )
 }

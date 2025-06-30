@@ -54,18 +54,18 @@ export const GptSearchBar = () => {
 
             // Access the model's output:
             const GeminiMovies = result.candidates?.[0]?.content?.parts?.[0]?.text;
-            console.log("Movie Suggestions:", GeminiMovies);
+            // console.log("Movie Suggestions:", GeminiMovies);
             dispatch(addGeminiErrorMsg(GeminiMovies));
 
             //converted GeminiMovies string to an array
             const movieSuggestionsArray = GeminiMovies.split(",");
-            console.log("Movie Suggestions Array:", movieSuggestionsArray);
+            // console.log("Movie Suggestions Array:", movieSuggestionsArray);
 
             //searching same movies in tmdb database but this function geminiTmdbMovies is async so we need to use Promise.all to wait for all promises to resolve
 
             const promiseArray = movieSuggestionsArray.map((movie) => geminiTmdbMovies(movie));
             const finalGeminiTmdbMovies = await Promise.all(promiseArray);
-            console.log("Final TMDB Movies:", finalGeminiTmdbMovies);
+            // console.log("Final TMDB Movies:", finalGeminiTmdbMovies);
 
             //dispatching the finalGeminiTmdbMovies to the store
             dispatch(addGeminiMovieResults({ movieMatches: finalGeminiTmdbMovies, movieNames: movieSuggestionsArray }));
@@ -88,15 +88,15 @@ export const GptSearchBar = () => {
 
     const langKey = useSelector((store) => store.langConfig.lang);
     return (
-        <div className="pt-[10%] flex justify-center">
+        <div className="pt-[50%] md:pt-[10%] flex justify-center w-full">
 
-            <form className="bg-black rounded-lg w-1/2 grid grid-cols-12 " onSubmit={(e) => e.preventDefault()}>
+            <form className="bg-black rounded-lg w-full md:w-1/2 grid grid-cols-12 " onSubmit={(e) => e.preventDefault()}>
                 <input type="text"
                     ref={searchText}
                     placeholder={lang[langKey].placeholder}
                     className="m-4 p-4 col-span-9 text-gray-600 bg-white">
                 </input>
-                <button className="bg-red-800 text-white rounded-lg col-span-3 m-4 py-2 px-4" onClick={handleSearchClick}>{lang[langKey].search}</button>
+                <button className=" bg-red-800 text-white rounded-lg col-span-3  mx-3 my-4 py-2 px-2" onClick={handleSearchClick}>{lang[langKey].search}</button>
             </form>
 
         </div>

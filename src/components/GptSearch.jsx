@@ -10,10 +10,14 @@ export const GptSearch = () => {
                 <img
                     src={BG_URL}
                     alt="screen-img"
+                    className="h-screen object-cover md:w-screen"
                 />
             </div>
-            <GptSearchBar />
-            <GptMovieSuggestions />
+            <div className="">
+                <GptSearchBar />
+                <GptMovieSuggestions />
+            </div>
+
 
         </div>
     );
