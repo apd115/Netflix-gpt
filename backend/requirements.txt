@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic-settings
+pwdlib[argon2]
+pydantic[email]
