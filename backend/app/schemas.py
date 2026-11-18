@@ -18,3 +18,14 @@ class UserResponse(BaseModel):
     email: EmailStr
     display_name: str
     created_at: datetime
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    # No min_length here: at login we only check the password, not judge it.
+    password: str = Field(max_length=128)
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

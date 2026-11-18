@@ -29,3 +29,6 @@ export const Lang_Identifier = [
 
 export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 export const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
+
+// Firebase gave every user this avatar; our backend does not store photos yet.
+export const DEFAULT_AVATAR = "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg";

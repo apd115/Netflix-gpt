@@ -1,6 +1,5 @@
-import { auth } from "../utils/Firebase.config.jsx";
 import { useNavigate } from "react-router-dom";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { logoutUser, restoreSession } from "../utils/authApi.js";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser, removeUser } from "../utils/userSlice.js";
@@ -26,15 +25,15 @@ const Header = () => {
   }
 
 
-  const handleSignOut = () => {
-    signOut(auth).then(() => {
-      // Sign-out successful.
-
-    }).catch((error) => {
-      // An error happened.
-      navigate("/error");
-    });
-
+  const handleSignOut = async () => {
+    try {
+      await logoutUser(); // tells the backend to revoke the session
+    } catch {
+      // Even if the network call failed, the user asked to sign out,
+      // so we still sign them out on this device below.
+    }
+    dispatch(removeUser());
+    navigate("/");
   }
 
   const handleClick = () => {
@@ -42,25 +41,26 @@ const Header = () => {
 
   }
 
+  // On mount, ask the backend "is someone logged in?" (this replaces Firebase's
+  // onAuthStateChanged). It works after a page refresh too: the access token is
+  // gone from memory, but the httpOnly cookie lets restoreSession get a new one.
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => { //this returns a function to stop listening to auth change(user login logout)
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        const { uid, email, displayName, photoURL } = user;
+    let cancelled = false; // if we unmount before the answer arrives, do nothing
 
-        dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
-        navigate("/Browse");
-        // ...
+    restoreSession().then((sessionUser) => {
+      if (cancelled) return;
+      if (sessionUser) {
+        dispatch(addUser(sessionUser));
+        navigate("/browse");
       } else {
-        // User is signed out
-        // ...
         dispatch(removeUser());
         navigate("/");
       }
     });
-    //unsubscribe when component unmounts
-    return () => unsubscribe(); //when something is returned from useEffect react calls it when component unmounts
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

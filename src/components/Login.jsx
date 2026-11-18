@@ -3,10 +3,8 @@ import Header from "./Header";
 import { Form } from "react-router-dom";
 import { useState, useRef } from "react";
 import { Validate } from "../utils/Validate";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../utils/Firebase.config";
+import { loginUser, registerUser } from "../utils/authApi";
 import { useNavigate } from "react-router-dom";
-import { updateProfile } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BG_URL } from "../utils/constants";
@@ -17,68 +15,38 @@ const Login = () => {
   const navigate = useNavigate();
   const [signUp, setSignUp] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const email = useRef(null);
   const password = useRef(null);
   const userName = useRef(null);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const msg = Validate(email.current.value, password.current.value);
 
     setErrorMsg(msg);
     if (msg) return;
 
-    if (signUp) {
-      createUserWithEmailAndPassword(
-        auth,
-        email.current.value,
-        password.current.value
-      )
-        .then((userCredential) => {
-          // Signed up
-          const user = userCredential.user;
-          updateProfile(user, {
-            displayName: userName.current.value, photoURL: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Male_Avatar.jpg"
-          }).then(() => {
-            // Profile updated!
-            // ...
-            const { uid, email, displayName, photoURL } = auth.currentUser;
-            dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }))
+    setLoading(true); // stops a double-click from sending the request twice
+    try {
+      const credentials = {
+        email: email.current.value,
+        password: password.current.value,
+      };
 
+      // Sign-up creates the account and logs in; log-in only logs in.
+      // Both give back the user in the shape the rest of the app expects.
+      const user = signUp
+        ? await registerUser({ name: userName.current.value, ...credentials })
+        : await loginUser(credentials);
 
-          }).catch((error) => {
-            // An error occurred
-            // ...
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            setErrorMsg(errorCode + "-" + errorMessage);
-          });
-
-
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrorMsg(errorCode + "-" + errorMessage);
-          // ..
-        });
-    }
-    else {
-      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          const { uid, email, displayName, photoURL } = auth.currentUser;
-          dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
-
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErrorMsg(errorCode + "-" + errorMessage);
-        });
+      dispatch(addUser(user));
+      navigate("/browse");
+    } catch (error) {
+      // error.message is already readable text (see readError in api.js)
+      setErrorMsg(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,9 +95,10 @@ const Login = () => {
         <p className="text-red-600 p-1 m-2">{errorMsg}</p>
         <button
           onClick={handleClick}
-          className="bg-pink-950 text-white p-1 m-2 w-full rounded-lg cursor-pointer"
+          disabled={loading}
+          className="bg-pink-950 text-white p-1 m-2 w-full rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-wait"
         >
-          Sign In
+          {loading ? "Please wait..." : "Sign In"}
         </button>
         <p className="text-white p-2 cursor-pointer" onClick={toggleSignIn}>
           {signUp
