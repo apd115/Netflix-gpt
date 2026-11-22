@@ -41,7 +41,7 @@ const Login = () => {
         : await loginUser(credentials);
 
       dispatch(addUser(user));
-      navigate("/browse");
+      navigate("/browse", { replace: true }); // replace: the login page shouldn't stay in Back history
     } catch (error) {
       // error.message is already readable text (see readError in api.js)
       setErrorMsg(error.message);
@@ -67,7 +67,7 @@ const Login = () => {
       </div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="absolute w-full  md:w-3/12 mx-auto my-36 bg-black/70 p-12 left-0 right-0 text-gray-50 "
+        className="absolute w-full  md:w-3/12 mx-auto my-36 bg-black/70 p-12 left-0 right-0 text-gray-50 rounded-2xl"
       >
         <h1 className="font-bold py-4 text-3xl">
           {signUp ? "Sign Up" : "Log in"}

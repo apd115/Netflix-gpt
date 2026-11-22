@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     RATE_LIMIT_LOGIN_PER_MIN: int = 10
     RATE_LIMIT_REGISTER_PER_MIN: int = 5
     RATE_LIMIT_REFRESH_PER_MIN: int = 30
+    RATE_LIMIT_FORGOT_PER_MIN: int = 3
+    RATE_LIMIT_RESET_PER_MIN: int = 10
+
+    PASSWORD_RESET_MINUTES: int = 30
 
     # The ONE website allowed to call this API from a browser (CORS)
     FRONTEND_ORIGIN: str = "http://localhost:5173"

@@ -1,20 +1,31 @@
 import uuid
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, Response, status
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ..config import settings
+from ..database import SessionLocal
 from ..dependencies import get_current_user, get_db
-from ..models import RefreshToken, User, utcnow
+from ..mailer import send_password_reset_email
+from ..models import PasswordResetToken, RefreshToken, User, utcnow
 from ..rate_limit import rate_limit
-from ..schemas import LoginRequest, RegisterRequest, TokenResponse, UserResponse
+from ..schemas import (
+    ForgotPasswordRequest,
+    LoginRequest,
+    MessageResponse,
+    RegisterRequest,
+    ResetPasswordRequest,
+    TokenResponse,
+    UserResponse,
+)
 from ..security import (
     DUMMY_HASH,
     create_access_token,
     generate_refresh_token,
+    generate_reset_token,
     hash_password,
     hash_token,
     verify_password,
@@ -205,3 +216,83 @@ def logout_all(
     )
     db.commit()
     _clear_refresh_cookie(response)
+
+
+# ---------- password reset ----------
+def _create_and_send_reset(email: str) -> None:
+    """Runs AFTER the response was sent (see forgot_password). It opens its own
+    database session because the request's session is already closed by then."""
+    db = SessionLocal()
+    try:
+        user = db.scalar(select(User).where(User.email == email))
+        if user is None or not user.is_active:
+            return  # nothing to do, and nothing visible to the caller either way
+
+        # Only the newest link should work: spend any older unused ones.
+        db.execute(
+            update(PasswordResetToken)
+            .where(PasswordResetToken.user_id == user.id, PasswordResetToken.used_at.is_(None))
+            .values(used_at=utcnow())
+        )
+
+        raw = generate_reset_token()
+        db.add(
+            PasswordResetToken(
+                user_id=user.id,
+                token_hash=hash_token(raw),
+                expires_at=utcnow() + timedelta(minutes=settings.PASSWORD_RESET_MINUTES),
+            )
+        )
+        db.commit()
+
+        link = f"{settings.FRONTEND_ORIGIN}/reset-password?token={raw}"
+        send_password_reset_email(user.email, link)
+    finally:
+        db.close()
+
+
+@router.post(
+    "/forgot-password",
+    response_model=MessageResponse,
+    status_code=status.HTTP_202_ACCEPTED,
+    dependencies=[Depends(rate_limit("forgot", settings.RATE_LIMIT_FORGOT_PER_MIN, 60))],
+)
+def forgot_password(data: ForgotPasswordRequest, background_tasks: BackgroundTasks):
+    # The work happens in the background so the response is instant and identical
+    # whether or not the email exists (no account enumeration, no timing leak).
+    background_tasks.add_task(_create_and_send_reset, data.email.lower())
+    return MessageResponse(message="If that email is registered, a reset link has been sent.")
+
+
+@router.post(
+    "/reset-password",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(rate_limit("reset", settings.RATE_LIMIT_RESET_PER_MIN, 60))],
+)
+def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_db)):
+    invalid = HTTPException(status.HTTP_400_BAD_REQUEST, "Invalid or expired reset link")
+
+    token = db.scalar(
+        select(PasswordResetToken).where(PasswordResetToken.token_hash == hash_token(data.token))
+    )
+    if token is None or token.used_at is not None or token.expires_at < utcnow():
+        raise invalid
+
+    user = db.get(User, token.user_id)
+    if user is None or not user.is_active:
+        raise invalid
+
+    now = utcnow()
+    user.hashed_password = hash_password(data.new_password)
+    user.failed_login_attempts = 0  # a reset also clears any lockout
+    user.locked_until = None
+    token.used_at = now  # single use
+
+    # The old password may have been known to an attacker, so every existing
+    # login (on every device) must end.
+    db.execute(
+        update(RefreshToken)
+        .where(RefreshToken.user_id == user.id, RefreshToken.revoked_at.is_(None))
+        .values(revoked_at=now)
+    )
+    db.commit()

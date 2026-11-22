@@ -61,3 +61,8 @@ def hash_token(raw_token: str) -> str:
     """SHA-256 is fine here (unlike passwords) because the input is already
     long and random, so there is nothing for an attacker to guess."""
     return hashlib.sha256(raw_token.encode()).hexdigest()
+
+
+def generate_reset_token() -> str:
+    """Same idea as a refresh token: random, unguessable, carries no data."""
+    return secrets.token_urlsafe(48)
