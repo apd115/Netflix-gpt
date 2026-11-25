@@ -28,6 +28,9 @@ class Settings(BaseSettings):
 
     PASSWORD_RESET_MINUTES: int = 30
 
+    # TMDB "API Read Access Token". Lives only here, on the server, never in the browser.
+    TMDB_API_KEY: str
+
     # The ONE website allowed to call this API from a browser (CORS)
     FRONTEND_ORIGIN: str = "http://localhost:5173"
 

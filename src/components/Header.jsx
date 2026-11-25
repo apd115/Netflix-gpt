@@ -3,6 +3,7 @@ import { logoutUser, restoreSession } from "../utils/authApi.js";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser, removeUser } from "../utils/userSlice.js";
+import { markAuthChecked } from "../utils/authSlice.js";
 import { useDispatch } from "react-redux";
 import { Lang_Identifier, LOGO } from "../utils/constants.js";
 import lang from "../utils/langConstants.jsx";
@@ -52,6 +53,7 @@ const Header = () => {
 
     restoreSession().then((sessionUser) => {
       if (cancelled) return;
+      dispatch(markAuthChecked()); // the answer is in: pages may now decide what to show
       if (sessionUser) {
         dispatch(addUser(sessionUser));
         // Only the login page needs to push a logged-in user onward. On

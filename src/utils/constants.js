@@ -2,14 +2,6 @@
 // the site root, so public/logo.png is available at /logo.png.
 export const LOGO = "/logo.png";
 
-export const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMzI3NmU0MWU4MjU5YmVhZmQ5YWQ1ZjRhOGM3ODk3MyIsIm5iZiI6MTc0ODQyNjE5My43MTIsInN1YiI6IjY4MzZkZGQxYWIzNzcyN2ExNjJiODAyNiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zMeA_W9SfC9EIw6eE9zvmIDRdQce2aMCpgRxsSYUOzQ'
-  }
-};
-
 export const MOVIE_IMG_CDN = "https://image.tmdb.org/t/p/w500";
 export const BG_URL = "https://assets.nflxext.com/ffe/siteui/vlv3/69bec183-9cc8-49d4-8fc2-08228d3c91b4/web/IN-en-20250414-TRIFECTA-perspective_c8273fb1-8860-4ff5-bd1c-c2c4b44d5f2a_large.jpg";
 

@@ -1,11 +1,11 @@
 import React from "react";
 import Header from "./Header";
-import { Form } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import { Validate } from "../utils/Validate";
 import { loginUser, registerUser } from "../utils/authApi";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BG_URL } from "../utils/constants";
 
@@ -16,6 +16,8 @@ const Login = () => {
   const [signUp, setSignUp] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
+  const user = useSelector((store) => store.user);
+  const authChecked = useSelector((store) => store.auth.checked);
 
   const email = useRef(null);
   const password = useRef(null);
@@ -53,6 +55,20 @@ const Login = () => {
   const toggleSignIn = () => {
     setSignUp(!signUp);
   };
+
+  // Already logged in (e.g. pressed Back to "/"): leave at once, no network wait.
+  if (user) return <Navigate to="/browse" replace />;
+
+  // Not logged in as far as we know, but the session check hasn't answered yet.
+  // Show only the logo bar (Header runs the check) so the form never flashes.
+  if (!authChecked) {
+    return (
+      <div className="h-screen bg-black">
+        <Header />
+      </div>
+    );
+  }
+
   return (
     <div className="relative">
       <Header />
