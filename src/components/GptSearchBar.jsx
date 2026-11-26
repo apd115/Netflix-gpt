@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import lang from "../utils/langConstants.jsx";
 import { useRef } from "react";
-import { apiFetch } from "../utils/api";
+import { options } from "../utils/constants.js";
 import { GEMINI_URL, GEMINI_API_KEY } from "../utils/constants.js";
 import { useDispatch } from "react-redux";
 import { addGeminiErrorMsg, addGeminiMovieResults } from "../utils/gptSlice.jsx";
@@ -15,7 +15,8 @@ export const GptSearchBar = () => {
 
 
     const geminiTmdbMovies = async (movie) => {
-        const json = await apiFetch("/movies/search?query=" + encodeURIComponent(movie));
+        const data = await fetch("https://api.themoviedb.org/3/search/movie?query=" + movie + "&include_adult=false&language=en-US&page=1", options);
+        const json = await data.json();
         return json.results;
 
     }
